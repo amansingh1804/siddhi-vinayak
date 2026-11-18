@@ -2,6 +2,7 @@ import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { createBrowserRouter, Link, NavLink, Outlet, useLocation } from "react-router";
 import ProjectLocationsMap from "./components/ProjectLocationsMap";
 import FounderModal, { LEADERS } from "./components/FounderModal";
+import FloatingSocialBar from "./components/FloatingSocialBar";
 
 type IconName =
   | "arrow"
@@ -463,6 +464,7 @@ const socialLinks = [
   ["LinkedIn", "http://www.linkedin.com/in/mr-vishal-sutariya-980474220"],
   ["Facebook", "https://www.facebook.com/share/1CLyTHDM26/"],
   ["Instagram", "https://www.instagram.com/siddhi_infra?rpxt=NmR3MzB5dDhvZ20="],
+  ["WhatsApp", "https://wa.me/919429744199?text=Hello%20Siddhivinayak%20Infrastructure"],
 ] as const;
 
 const navigation = [
@@ -519,6 +521,7 @@ function Layout() {
         </button>
       </header>
       <Outlet />
+      <FloatingSocialBar />
       <Footer />
     </>
   );
