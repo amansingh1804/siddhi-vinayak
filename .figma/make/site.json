@@ -1,7 +1,16 @@
 {
-  "description": "Explore Siddhi Infra’s projects, services, and company information through a polished corporate website designed for prospective clients and partners.",
+  "title": "Siddhivinayak Infrastructure",
+  "description": "Siddhivinayak Infrastructure - Delivering government, institutional, industrial, and residential projects with quality, safety, and speed across Gujarat.",
+  "icons": {
+    "icon": "/favicon.png"
+  },
+  "openGraph": {
+    "title": "Siddhivinayak Infrastructure",
+    "description": "Building progress across Gujarat.",
+    "image": "/images/project-11.jpg"
+  },
   "robots": {
-    "index": false
+    "index": true
   },
   "accessibility": {
     "addBypassLinks": false,
