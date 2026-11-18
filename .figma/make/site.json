@@ -1,0 +1,10 @@
+{
+  "description": "Explore Siddhi Infra’s projects, services, and company information through a polished corporate website designed for prospective clients and partners.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
