@@ -2398,7 +2398,7 @@ h2 {
     serif;
   letter-spacing: -0.04em;
   max-width: 900px;
-  margin: 0 0 35px;
+  margin: 0;
 }
 .breadcrumbs {
   display: flex;

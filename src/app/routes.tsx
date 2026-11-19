@@ -551,11 +551,6 @@ function PageHero({ eyebrow, title, image }: { eyebrow: string; title: string; i
       <div className="container page-hero-content">
         <p className="eyebrow light">{eyebrow}</p>
         <h1>{title}</h1>
-        <div className="breadcrumbs">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <strong>{eyebrow}</strong>
-        </div>
       </div>
     </section>
   );
@@ -655,11 +650,6 @@ function Home() {
           <Icon name="arrow" size={22} />
         </button>
         <div className="hero-content" key={slide} aria-live="polite">
-          <div className="hero-slide-label">
-            <span>0{slide + 1}</span>
-            <i />
-            <p>{slides[slide].eyebrow}</p>
-          </div>
           <h1>
             {slides[slide].title.split(" ").slice(0, -1).join(" ")}{" "}
             <span>{slides[slide].title.split(" ").at(-1)}</span>
