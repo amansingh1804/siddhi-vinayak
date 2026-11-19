@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface SocialItem {
   id: string;
@@ -68,8 +68,36 @@ const SOCIAL_ITEMS: SocialItem[] = [
 ];
 
 export default function FloatingSocialBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <aside className="floating-social-dock" aria-label="Social media quick links">
+    <aside
+      className={`floating-social-dock ${isOpen ? "is-open" : "is-collapsed"}`}
+      aria-label="Social media quick links"
+    >
+      {/* Mobile Toggle Trigger */}
+      <button
+        type="button"
+        className="floating-social-toggle-btn"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Close social media menu" : "Open social media menu"}
+      >
+        {isOpen ? (
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+        )}
+      </button>
+
       <ul className="floating-social-list" role="list">
         {SOCIAL_ITEMS.map((item) => (
           <li key={item.id} className="floating-social-item">

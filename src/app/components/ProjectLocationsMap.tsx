@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { CITIES, MAP_DOTS, MAP_CONFIG, type CityLocation } from "./gujaratMapData";
 
 export default function ProjectLocationsMap() {
-  const [activeCityName, setActiveCityName] = useState<string | null>(null);
+  const [activeCityName, setActiveCityName] = useState<string>("Ahmedabad");
   const [isHovered, setIsHovered] = useState(false);
-  const [tilt, setTilt] = useState({ x: 4, y: -4 });
-  const [targetTilt, setTargetTilt] = useState({ x: 4, y: -4 });
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [targetTilt, setTargetTilt] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Smooth tilt lerp
+  // Smooth tilt lerp (desktop only)
   useEffect(() => {
     const updateTilt = () => {
       setTilt((prev) => {
@@ -32,24 +32,27 @@ export default function ProjectLocationsMap() {
   }, [targetTilt]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (window.innerWidth < 768 || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    // Max tilt angles: 10deg
     setTargetTilt({
-      x: -y * 12,
-      y: x * 14,
+      x: -y * 10,
+      y: x * 12,
     });
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setTargetTilt({ x: 4, y: -4 }); // return to subtle resting 3D angle
+    setTargetTilt({ x: 0, y: 0 });
   };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
+  };
+
+  const handleSelectCity = (name: string) => {
+    setActiveCityName(name);
   };
 
   // Find active city object
@@ -179,22 +182,34 @@ export default function ProjectLocationsMap() {
 
                   // If it's a project city dot (orange in original)
                   return (
-                    <circle
-                      key={`city-dot-${dot.city}`}
-                      cx={dot.x}
-                      cy={dot.y}
-                      r={isPopped ? 8.5 : MAP_CONFIG.dotRadius + 0.3}
-                      fill={isPopped ? "#e26f12" : "#ea7e2a"}
-                      filter={isPopped ? "url(#pop-glow)" : "url(#orange-glow)"}
-                      opacity={opacity}
-                      className={`project-map-dot-city ${isPopped ? "is-popped" : ""}`}
-                      onMouseEnter={() => dot.city && setActiveCityName(dot.city)}
-                      onMouseLeave={() => setActiveCityName(null)}
-                      style={{
-                        cursor: "pointer",
-                        transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                      }}
-                    />
+                    <g
+                      key={`city-dot-group-${dot.city}`}
+                      className="project-map-city-interactive-group"
+                      onClick={() => dot.city && handleSelectCity(dot.city)}
+                      onTouchStart={() => dot.city && handleSelectCity(dot.city)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {/* Invisible touch-friendly circle for mobile fingers */}
+                      <circle
+                        cx={dot.x}
+                        cy={dot.y}
+                        r={18}
+                        fill="transparent"
+                      />
+                      <circle
+                        cx={dot.x}
+                        cy={dot.y}
+                        r={isPopped ? 8.5 : MAP_CONFIG.dotRadius + 0.3}
+                        fill={isPopped ? "#e26f12" : "#ea7e2a"}
+                        filter={isPopped ? "url(#pop-glow)" : "url(#orange-glow)"}
+                        opacity={opacity}
+                        className={`project-map-dot-city ${isPopped ? "is-popped" : ""}`}
+                        onMouseEnter={() => dot.city && handleSelectCity(dot.city)}
+                        style={{
+                          transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        }}
+                      />
+                    </g>
                   );
                 })}
               </g>
@@ -205,7 +220,9 @@ export default function ProjectLocationsMap() {
                   className="project-map-active-fx"
                   style={{
                     transformOrigin: `${activeCity.x}px ${activeCity.y}px`,
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleSelectCity(activeCity.name)}
                 >
                   {/* Expanding Sonar Waves */}
                   <circle
@@ -258,7 +275,7 @@ export default function ProjectLocationsMap() {
               )}
             </svg>
 
-            {/* 3D Floating Tooltip Pin */}
+            {/* 3D Floating Tooltip Pin (Desktop) */}
             {activeCity && (
               <div
                 className="project-map-tooltip"
@@ -284,6 +301,19 @@ export default function ProjectLocationsMap() {
             )}
           </div>
 
+          {/* Interactive Mobile Active Location Banner */}
+          {activeCity && (
+            <div className="project-map-mobile-card">
+              <div className="project-map-mobile-card-top">
+                <span className="project-map-mobile-dot" />
+                <span className="project-map-mobile-region">{activeCity.region}</span>
+                <span className="project-map-mobile-status">Project Location</span>
+              </div>
+              <h4 className="project-map-mobile-title">{activeCity.name}</h4>
+              <p className="project-map-mobile-desc">{activeCity.projects || "Siddhivinayak Infrastructure Project Location"}</p>
+            </div>
+          )}
+
           {/* Cities List Column (2 Columns of 10 Cities Each) */}
           <div className="project-map-cities-container">
             <div className="project-map-columns">
@@ -294,11 +324,8 @@ export default function ProjectLocationsMap() {
                   return (
                     <li
                       key={city.name}
-                      onMouseEnter={() => setActiveCityName(city.name)}
-                      onMouseLeave={() => setActiveCityName(null)}
-                      onClick={() =>
-                        setActiveCityName((prev) => (prev === city.name ? null : city.name))
-                      }
+                      onMouseEnter={() => handleSelectCity(city.name)}
+                      onClick={() => handleSelectCity(city.name)}
                       className={`project-map-city-item ${isActive ? "active" : ""}`}
                     >
                       <span className="project-map-city-indicator" />
@@ -315,11 +342,8 @@ export default function ProjectLocationsMap() {
                   return (
                     <li
                       key={city.name}
-                      onMouseEnter={() => setActiveCityName(city.name)}
-                      onMouseLeave={() => setActiveCityName(null)}
-                      onClick={() =>
-                        setActiveCityName((prev) => (prev === city.name ? null : city.name))
-                      }
+                      onMouseEnter={() => handleSelectCity(city.name)}
+                      onClick={() => handleSelectCity(city.name)}
                       className={`project-map-city-item ${isActive ? "active" : ""}`}
                     >
                       <span className="project-map-city-indicator" />
@@ -332,7 +356,7 @@ export default function ProjectLocationsMap() {
 
             {/* Quick interactive hint */}
             <div className="project-map-hint">
-              <span>✦ Hover or tap any location to pop on map</span>
+              <span>✦ Tap any dot on the map or city name below</span>
             </div>
           </div>
         </div>

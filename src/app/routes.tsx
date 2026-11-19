@@ -12,12 +12,18 @@ type IconName =
   | "close"
   | "mail"
   | "map"
+  | "maximize"
   | "menu"
+  | "minimize"
+  | "mute"
+  | "pause"
   | "phone"
+  | "play"
   | "quote"
   | "shield"
   | "team"
-  | "tools";
+  | "tools"
+  | "volume";
 
 function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
@@ -52,10 +58,34 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
         <path d="M9 3v15M15 6v15" />
       </>
     ),
+    maximize: (
+      <>
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+      </>
+    ),
     menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+    minimize: (
+      <>
+        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+      </>
+    ),
+    mute: (
+      <>
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <line x1="23" y1="9" x2="17" y2="15" />
+        <line x1="17" y1="9" x2="23" y2="15" />
+      </>
+    ),
+    pause: (
+      <>
+        <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" stroke="none" />
+        <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" stroke="none" />
+      </>
+    ),
     phone: (
       <path d="M7 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-3l-4-2-2 2c-3.7-1.6-6.4-4.3-8-8l2-2Z" />
     ),
+    play: <path d="m7 4 12 8-12 8V4Z" fill="currentColor" stroke="none" />,
     quote: (
       <path d="M8 11H4c0-4 2-6 6-7v2c-2 .7-3 1.7-3 3h3v7H4v-5m14 0h-4c0-4 2-6 6-7v2c-2 .7-3 1.7-3 3h3v7h-6v-5" />
     ),
@@ -71,6 +101,13 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
       <>
         <path d="m14 7 3-3 3 3-3 3M4 20l10-10" />
         <path d="m8 4 2 2-4 4-2-2a4 4 0 0 1 4-4Z" />
+      </>
+    ),
+    volume: (
+      <>
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
       </>
     ),
   };
@@ -195,49 +232,114 @@ const expertise = [
   {
     number: "01",
     title: "Industrial",
-    text: "Purpose-built factories, training institutes, warehouses and complex industrial facilities delivered with precision and durability.",
+    fullName: "Industrial Infrastructure",
+    text: "Purpose-built factories, training institutes, warehouses, and complex industrial structures delivered with precision and durability.",
     image: "/images/project-1.png",
-    count: "15+",
-    countLabel: "Projects delivered",
+    count: "15+ Projects",
     tags: ["Factories", "Warehouses", "ITIs", "Cover Shades"],
   },
   {
     number: "02",
     title: "Institutional",
-    text: "Enduring campuses, colleges, schools and public institutions designed for everyday life and long-term community use.",
+    fullName: "Institutional Excellence",
+    text: "Enduring campuses, colleges, schools, and public institutions designed for everyday life and community growth.",
     image: "/images/project-17.jpg",
-    count: "20+",
-    countLabel: "Projects delivered",
+    count: "20+ Projects",
     tags: ["Colleges", "Schools", "Hostels", "Civic Halls"],
   },
   {
     number: "03",
     title: "Government",
-    text: "Dependable civic infrastructure delivered with rigorous quality, safety and accountability at every scale.",
+    fullName: "Civic & Government",
+    text: "Dependable public infrastructure delivered with rigorous quality, safety, and accountability at every scale.",
     image: "/images/project-11.jpg",
-    count: "18+",
-    countLabel: "Projects delivered",
-    tags: ["Courts", "Police Stations", "Godowns", "Roads"],
+    count: "18+ Projects",
+    tags: ["Courts", "Police Stations", "Godowns", "Civic Offices"],
   },
   {
     number: "04",
     title: "Residential",
-    text: "Thoughtful residential environments and government quarters made for comfort, longevity and community well-being.",
+    fullName: "Residential Communities",
+    text: "Thoughtful residential environments and government quarters built for comfort, longevity, and well-being.",
     image: "/images/project-8.png",
-    count: "10+",
-    countLabel: "Projects delivered",
+    count: "10+ Projects",
     tags: ["Quarters", "Housing", "Govt. Residential", "Layouts"],
   },
 ];
 
-const gallery = [
-  ["/images/project-12.jpg", "Government building at Asalpur"],
-  ["/images/project-15.jpg", "Police station at Khergam"],
-  ["/images/project-4.png", "Industrial Training Institute at Vallabhipur"],
-  ["/images/project-16.jpeg", "School complex at Pardi"],
-  ["/images/project-7.jpg", "Residential quarters at Botad"],
-  ["/images/project-13.jpg", "Godown at Dhandhuka"],
-] as const;
+interface GalleryItem {
+  id: string;
+  image: string;
+  title: string;
+  location: string;
+  category: string;
+  video: string;
+  poster: string;
+  desc: string;
+}
+
+const gallery: GalleryItem[] = [
+  {
+    id: "archive-01",
+    image: "/images/project-12.jpg",
+    title: "Government building at Asalpur",
+    location: "Asalpur, Gujarat",
+    category: "Civil Construction",
+    video: "/media/videos/site-video-1.mp4",
+    poster: "/media/videos/site-video-1.jpg",
+    desc: "Comprehensive on-site drone capture showcasing the structural framework, masonry elevation, and perimeter civil development engineered to civic standards at Asalpur.",
+  },
+  {
+    id: "archive-02",
+    image: "/images/project-15.jpg",
+    title: "Police station at Khergam",
+    location: "Khergam, Gujarat",
+    category: "Civic Infrastructure",
+    video: "/media/videos/site-video-2.mp4",
+    poster: "/media/videos/site-video-2.jpg",
+    desc: "Full civil execution and modern façade architecture for the departmental police headquarters at Khergam, built for durability, security, and departmental operations.",
+  },
+  {
+    id: "archive-03",
+    image: "/images/project-4.png",
+    title: "Industrial Training Institute at Vallabhipur",
+    location: "Vallabhipur, Gujarat",
+    category: "Institutional Campus",
+    video: "/media/videos/site-video-3.mp4",
+    poster: "/media/videos/site-video-3.jpg",
+    desc: "Aerial site documentation illustrating the expansive institutional campus, multi-wing technical workshop sheds, and administrative quarters at Vallabhipur.",
+  },
+  {
+    id: "archive-04",
+    image: "/images/project-16.jpeg",
+    title: "School complex at Pardi",
+    location: "Pardi, Gujarat",
+    category: "Educational Campus",
+    video: "/media/videos/site-video-4.mp4",
+    poster: "/media/videos/site-video-4.jpg",
+    desc: "Modern multi-storey educational facility featuring spacious classroom wings, open corridors, robust structural foundations, and safe campus environments.",
+  },
+  {
+    id: "archive-05",
+    image: "/images/project-7.jpg",
+    title: "Residential quarters at Botad",
+    location: "Botad, Gujarat",
+    category: "Government Residential",
+    video: "/media/videos/site-video-5.mp4",
+    poster: "/media/videos/site-video-5.jpg",
+    desc: "High-density residential quarter blocks and foundational earthwork constructed for government staff and administrative personnel in Botad.",
+  },
+  {
+    id: "archive-06",
+    image: "/images/project-13.jpg",
+    title: "Godown at Dhandhuka",
+    location: "Dhandhuka, Gujarat",
+    category: "Industrial & Storage",
+    video: "/media/videos/site-video-6.mp4",
+    poster: "/media/videos/site-video-6.jpg",
+    desc: "Heavy-duty industrial storage godown and steel superstructure engineered for maximum volumetric efficiency, logistics access, and high-load transport.",
+  },
+];
 
 const HR_FUNCTIONS = [
   {
@@ -507,10 +609,6 @@ function Layout() {
         <Link className="brand" to="/" aria-label="Siddhivinayak Infrastructure home">
           <img src="/images/siddhivinayak-logo.png" alt="Siddhivinayak Infrastructure" />
         </Link>
-        <div className="header-trust-badge" title="24 Years of Construction Trust">
-          <span className="trust-badge-dot" />
-          <span>24 Years of Trust</span>
-        </div>
         <nav className={menuOpen ? "nav-open" : ""} aria-label="Primary navigation">
           {navigation.map(([label, path]) => (
             <NavLink
@@ -632,18 +730,7 @@ function HeroSlideItem({
 }
 
 function ExpertiseSection() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = window.setInterval(() => {
-      setActive((i) => (i + 1) % expertise.length);
-    }, 5500);
-    return () => window.clearInterval(timer);
-  }, [paused]);
-
-  const item = expertise[active];
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <section className="section expertise-section">
@@ -654,61 +741,54 @@ function ExpertiseSection() {
             <h2>Expertise across every sector.</h2>
           </div>
           <p>
-            Integrated construction capabilities, experienced teams and disciplined execution bring
-            demanding ideas to life.
+            Integrated construction capabilities, experienced teams, and disciplined execution
+            bringing landmark spaces to life across Gujarat.
           </p>
         </div>
-        <div
-          className="expertise-panel"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-        >
-          {/* Left: Tab list */}
-          <div className="expertise-panel-tabs">
-            {expertise.map((exp, i) => (
-              <button
-                key={exp.title}
-                className={`expertise-tab${i === active ? " active" : ""}`}
-                onClick={() => setActive(i)}
-                aria-pressed={i === active}
-              >
-                {i === active && <span className="expertise-tab-bar" key={active} />}
-                <div className="expertise-tab-top">
-                  <span className="expertise-tab-num">{exp.number}</span>
-                  <h3>{exp.title}</h3>
-                  <span className="expertise-count-badge">{exp.count}</span>
-                </div>
-                <p>{exp.text}</p>
-                <div className="expertise-tags">
-                  {exp.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-              </button>
-            ))}
-          </div>
 
-          {/* Right: Image stage */}
-          <div className="expertise-panel-stage" key={active}>
-            <img src={item.image} alt={item.title} />
-            <div className="expertise-panel-shade" />
-            <div className="expertise-panel-label">
-              <div className="expertise-panel-info">
-                <div className="expertise-panel-pill">
-                  <span>{item.number}</span>
-                  <strong>{item.title}</strong>
+        <div className="expertise-strip" role="region" aria-label="Sectors of expertise">
+          {expertise.map((item, index) => {
+            const isHovered = hoveredIndex === index;
+            const hasHover = hoveredIndex !== null;
+
+            return (
+              <article
+                key={item.title}
+                className={`expertise-column ${isHovered ? "expanded" : hasHover ? "compressed" : ""}`}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                <div className="expertise-col-media">
+                  <img src={item.image} alt={item.fullName} />
+                  <div className="expertise-col-shade" />
+                  <div className="expertise-col-gradient" />
                 </div>
-                <p>{item.text}</p>
-                <Link to="/projects" className="expertise-panel-cta">
-                  View {item.title} projects <Icon name="arrow" size={14} />
-                </Link>
-              </div>
-              <div className="expertise-panel-stat">
-                <strong>{item.count}</strong>
-                <span>{item.countLabel}</span>
-              </div>
-            </div>
-          </div>
+
+                <div className="expertise-col-top">
+                  <div className="expertise-col-num-pill">
+                    <span>{item.number}</span>
+                    <i />
+                    <strong>{item.title}</strong>
+                  </div>
+                  <span className="expertise-col-count">{item.count}</span>
+                </div>
+
+                <div className="expertise-col-bottom">
+                  <h3>{item.fullName}</h3>
+                  <p className="expertise-col-desc">{item.text}</p>
+                  <div className="expertise-col-tags">
+                    {item.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                  <Link to="/projects" className="expertise-col-link">
+                    <span>View {item.title} Projects</span>
+                    <Icon name="arrow" size={14} />
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1247,6 +1327,352 @@ function parseProjectInfo(rawTitle: string) {
   };
 }
 
+function getProjectVideo(title: string, imageNum?: number): { video: string; poster: string } | null {
+  const t = title.toLowerCase();
+  if (t.includes("asalpur") || imageNum === 12) {
+    return { video: "/media/videos/site-video-1.mp4", poster: "/media/videos/site-video-1.jpg" };
+  }
+  if (t.includes("khergam") || imageNum === 15) {
+    return { video: "/media/videos/site-video-2.mp4", poster: "/media/videos/site-video-2.jpg" };
+  }
+  if (t.includes("vallabhipur") || imageNum === 4) {
+    return { video: "/media/videos/site-video-3.mp4", poster: "/media/videos/site-video-3.jpg" };
+  }
+  if (t.includes("pardi") || imageNum === 16) {
+    return { video: "/media/videos/site-video-4.mp4", poster: "/media/videos/site-video-4.jpg" };
+  }
+  if (t.includes("botad") || imageNum === 7 || imageNum === 8 || imageNum === 5) {
+    return { video: "/media/videos/site-video-5.mp4", poster: "/media/videos/site-video-5.jpg" };
+  }
+  if (t.includes("dhandhuka") || imageNum === 13) {
+    return { video: "/media/videos/site-video-6.mp4", poster: "/media/videos/site-video-6.jpg" };
+  }
+  if (t.includes("ranpur") || imageNum === 3 || imageNum === 17 || imageNum === 18) {
+    return { video: "/media/videos/site-video-7.mp4", poster: "/media/videos/site-video-7.jpg" };
+  }
+  return null;
+}
+
+function VideoPlayer({
+  src,
+  poster,
+  title,
+  autoPlay = false,
+  className = "",
+}: {
+  src: string;
+  poster?: string;
+  title?: string;
+  autoPlay?: boolean;
+  className?: string;
+}) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const progressTrackRef = useRef<HTMLDivElement | null>(null);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [bufferedEnd, setBufferedEnd] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const controlsTimeoutRef = useRef<number | null>(null);
+
+  const formatTime = (secs: number) => {
+    if (isNaN(secs) || secs < 0) return "0:00";
+    const minutes = Math.floor(secs / 60);
+    const seconds = Math.floor(secs % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused || videoRef.current.ended) {
+      videoRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {});
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    if (autoPlay && videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(() => {
+            // Browser policy blocked unmuted autoplay; retry muted so video plays visually
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              setIsMuted(true);
+              videoRef.current
+                .play()
+                .then(() => setIsPlaying(true))
+                .catch(() => {});
+            }
+          });
+      }
+    }
+  }, [src, autoPlay]);
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current || isDragging) return;
+    setCurrentTime(videoRef.current.currentTime);
+    if (videoRef.current.buffered.length > 0) {
+      const buffered = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
+      setBufferedEnd(buffered);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (!videoRef.current) return;
+    setDuration(videoRef.current.duration || 0);
+  };
+
+  const seekTo = (clientX: number) => {
+    if (!progressTrackRef.current || !videoRef.current || !duration) return;
+    const rect = progressTrackRef.current.getBoundingClientRect();
+    const pos = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const targetTime = pos * duration;
+    videoRef.current.currentTime = targetTime;
+    setCurrentTime(targetTime);
+  };
+
+  const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    seekTo(e.clientX);
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      seekTo(moveEvent.clientX);
+    };
+
+    const onMouseUp = () => {
+      setIsDragging(false);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!e.touches[0]) return;
+    setIsDragging(true);
+    seekTo(e.touches[0].clientX);
+
+    const onTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches[0]) seekTo(moveEvent.touches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+      setIsDragging(false);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+
+    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchend", onTouchEnd);
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    if (isMuted) {
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      if (volume === 0) {
+        setVolume(1);
+        videoRef.current.volume = 1;
+      }
+    } else {
+      videoRef.current.muted = true;
+      setIsMuted(true);
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    if (videoRef.current) {
+      videoRef.current.volume = val;
+      if (val === 0) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      } else if (isMuted) {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+      }
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (!containerRef.current) return;
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const handleMouseMove = () => {
+    setShowControls(true);
+    if (controlsTimeoutRef.current) window.clearTimeout(controlsTimeoutRef.current);
+    if (isPlaying) {
+      controlsTimeoutRef.current = window.setTimeout(() => {
+        setShowControls(false);
+      }, 2500);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (controlsTimeoutRef.current) window.clearTimeout(controlsTimeoutRef.current);
+    };
+  }, []);
+
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const bufferedPercent = duration > 0 ? (bufferedEnd / duration) * 100 : 0;
+
+  return (
+    <div
+      ref={containerRef}
+      className={`custom-video-player ${className} ${isPlaying ? "is-playing" : "is-paused"} ${
+        showControls || !isPlaying ? "controls-visible" : "controls-hidden"
+      } ${isFullscreen ? "is-fullscreen" : ""}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => isPlaying && setShowControls(false)}
+    >
+      <video
+        key={src}
+        ref={videoRef}
+        src={src}
+        poster={poster}
+        playsInline
+        preload="metadata"
+        onClick={togglePlay}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
+      />
+
+      {/* Center Play / Pause Overlay Button */}
+      <button
+        type="button"
+        className="custom-video-center-btn"
+        onClick={togglePlay}
+        aria-label={isPlaying ? "Pause video" : "Play video"}
+      >
+        <span className="custom-video-center-icon">
+          <Icon name={isPlaying ? "pause" : "play"} size={26} />
+        </span>
+      </button>
+
+      {/* Custom Bottom Controls Bar with Brand Orange Progress Bar */}
+      <div className="custom-video-controls" onClick={(e) => e.stopPropagation()}>
+        {/* Progress Track spanning full width */}
+        <div
+          ref={progressTrackRef}
+          className="custom-video-progress-wrap"
+          onMouseDown={handleProgressMouseDown}
+          onTouchStart={handleTouchStart}
+          role="slider"
+          aria-label="Video scrubber"
+          aria-valuemin={0}
+          aria-valuemax={duration}
+          aria-valuenow={currentTime}
+          tabIndex={0}
+        >
+          <div className="custom-video-progress-bg">
+            <div
+              className="custom-video-progress-buffered"
+              style={{ width: `${bufferedPercent}%` }}
+            />
+            <div
+              className="custom-video-progress-filled"
+              style={{ width: `${progressPercent}%` }}
+            >
+              <div className="custom-video-progress-thumb" />
+            </div>
+          </div>
+        </div>
+
+        {/* Action Row */}
+        <div className="custom-video-actions">
+          <div className="custom-video-left-actions">
+            <button
+              type="button"
+              className="custom-video-action-btn"
+              onClick={togglePlay}
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              <Icon name={isPlaying ? "pause" : "play"} size={16} />
+            </button>
+
+            <div className="custom-video-time">
+              <span className="custom-video-current-time">{formatTime(currentTime)}</span>
+              <span className="custom-video-time-divider">/</span>
+              <span className="custom-video-duration-time">{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          <div className="custom-video-right-actions">
+            <div className="custom-video-volume-wrap">
+              <button
+                type="button"
+                className="custom-video-action-btn"
+                onClick={toggleMute}
+                aria-label={isMuted ? "Unmute" : "Mute"}
+              >
+                <Icon name={isMuted || volume === 0 ? "mute" : "volume"} size={17} />
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={isMuted ? 0 : volume}
+                onChange={handleVolumeChange}
+                className="custom-video-volume-slider"
+                aria-label="Volume slider"
+              />
+            </div>
+
+            <button
+              type="button"
+              className="custom-video-action-btn"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              <Icon name={isFullscreen ? "minimize" : "maximize"} size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProjectGrid({
   items,
   featured = true,
@@ -1255,6 +1681,7 @@ function ProjectGrid({
   featured?: boolean;
 }) {
   const [selectedProject, setSelectedProject] = useState<(readonly [string, string, number]) | null>(null);
+  const [projectMediaMode, setProjectMediaMode] = useState<"video" | "photo">("video");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1270,23 +1697,30 @@ function ProjectGrid({
     };
   }, [selectedProject]);
 
+  const handleOpenProject = (item: readonly [string, string, number]) => {
+    setSelectedProject(item);
+    const videoData = getProjectVideo(item[0], item[2]);
+    setProjectMediaMode(videoData ? "video" : "photo");
+  };
+
   return (
     <>
       <div className="projects-grid">
         {items.map(([title, category, image], index) => {
           const info = parseProjectInfo(title);
+          const videoData = getProjectVideo(title, image);
           return (
             <article
               className={`project-card ${featured && index === 0 ? "project-featured" : ""}`}
               key={title}
-              onClick={() => setSelectedProject([title, category, image])}
+              onClick={() => handleOpenProject([title, category, image])}
               role="button"
               tabIndex={0}
-              aria-label={`View details for ${title}`}
+              aria-label={`View details and media for ${title}`}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  setSelectedProject([title, category, image]);
+                  handleOpenProject([title, category, image]);
                 }
               }}
             >
@@ -1302,6 +1736,12 @@ function ProjectGrid({
                   <Icon name="map" size={13} />
                   {info.location}
                 </span>
+                {videoData && (
+                  <span className="project-video-pill">
+                    <Icon name="play" size={10} />
+                    <span>Site Video</span>
+                  </span>
+                )}
               </div>
 
               {/* Bottom Info Overlay */}
@@ -1310,8 +1750,8 @@ function ProjectGrid({
                   <span className="project-spec">Infrastructure • Gujarat</span>
                   <h3>{title}</h3>
                 </div>
-                <div className="project-action-btn" title="View Project Details">
-                  <Icon name="arrow" size={18} />
+                <div className="project-action-btn" title="View Project Details & Video">
+                  <Icon name={videoData ? "play" : "arrow"} size={17} />
                 </div>
               </div>
             </article>
@@ -1319,69 +1759,122 @@ function ProjectGrid({
         })}
       </div>
 
-      {/* Lightbox / Detail Modal */}
-      {selectedProject && (
-        <div className="portfolio-modal-backdrop" onClick={() => setSelectedProject(null)}>
-          <div className="portfolio-modal-box" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="portfolio-modal-close"
-              onClick={() => setSelectedProject(null)}
-              aria-label="Close project preview"
-            >
-              <Icon name="close" size={20} />
-            </button>
-            <div className="portfolio-modal-image-wrap">
-              <img
-                src={projectImage(selectedProject[2])}
-                alt={selectedProject[0]}
-                className="portfolio-modal-image"
-              />
-              <div className="portfolio-modal-image-badges">
-                <span className="project-category-tag">
-                  <span className="project-category-dot" />
-                  {selectedProject[1]}
-                </span>
-                <span className="project-location-tag">
-                  <Icon name="map" size={13} />
-                  {parseProjectInfo(selectedProject[0]).location}
-                </span>
+      {/* Lightbox / Detail Modal with Video */}
+      {selectedProject && (() => {
+        const videoData = getProjectVideo(selectedProject[0], selectedProject[2]);
+        const info = parseProjectInfo(selectedProject[0]);
+        return (
+          <div className="portfolio-modal-backdrop" onClick={() => setSelectedProject(null)}>
+            <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
+              <div className="gallery-modal-top-bar">
+                {videoData ? (
+                  <div className="gallery-modal-tabs">
+                    <button
+                      type="button"
+                      className={`gallery-modal-tab ${projectMediaMode === "video" ? "active" : ""}`}
+                      onClick={() => setProjectMediaMode("video")}
+                    >
+                      <Icon name="play" size={13} />
+                      <span>Watch Video</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`gallery-modal-tab ${projectMediaMode === "photo" ? "active" : ""}`}
+                      onClick={() => setProjectMediaMode("photo")}
+                    >
+                      <Icon name="arrow" size={13} />
+                      <span>Photo</span>
+                    </button>
+                  </div>
+                ) : (
+                  <span className="gallery-modal-top-title">Project Archive</span>
+                )}
+                <button
+                  className="portfolio-modal-close"
+                  onClick={() => setSelectedProject(null)}
+                  aria-label="Close project preview"
+                >
+                  <Icon name="close" size={18} />
+                </button>
               </div>
-            </div>
-            <div className="portfolio-modal-content">
-              <span className="project-spec">Siddhivinayak Infrastructure Project</span>
-              <h3>{selectedProject[0]}</h3>
-              <p className="portfolio-modal-desc">
-                High-standard civil execution engineered with quality materials, advanced methodology,
-                and safety compliance for government and institutional infrastructure across Gujarat.
-              </p>
-              <div className="portfolio-modal-meta-grid">
-                <div className="portfolio-modal-meta-item">
-                  <label>Sector</label>
-                  <strong>{selectedProject[1]}</strong>
+
+              {/* Media Display: VideoPlayer with Orange Scrubber OR High-Res Photo */}
+              {projectMediaMode === "video" && videoData ? (
+                <div className="gallery-modal-player-wrap">
+                  <VideoPlayer
+                    src={videoData.video}
+                    poster={videoData.poster}
+                    title={selectedProject[0]}
+                    autoPlay={true}
+                  />
                 </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Location</label>
-                  <strong>{parseProjectInfo(selectedProject[0]).location}</strong>
+              ) : (
+                <div className="portfolio-modal-image-wrap">
+                  <img
+                    src={projectImage(selectedProject[2])}
+                    alt={selectedProject[0]}
+                    className="portfolio-modal-image"
+                  />
+                  <div className="portfolio-modal-image-badges">
+                    <span className="project-category-tag">
+                      <span className="project-category-dot" />
+                      {selectedProject[1]}
+                    </span>
+                    <span className="project-location-tag">
+                      <Icon name="map" size={13} />
+                      {info.location}
+                    </span>
+                  </div>
                 </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Execution Quality</label>
-                  <strong>ISO Standard Compliant</strong>
+              )}
+
+              <div className="portfolio-modal-content">
+                <div className="gallery-modal-header-row">
+                  <div>
+                    <span className="project-spec">{selectedProject[1]} • Siddhivinayak Infrastructure</span>
+                    <h3>{selectedProject[0]}</h3>
+                  </div>
+                  <span className="gallery-modal-loc-badge">
+                    <Icon name="map" size={13} />
+                    {info.location}
+                  </span>
                 </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Delivery Status</label>
-                  <strong className="status-delivered">Delivered / Active</strong>
+                <p className="portfolio-modal-desc">
+                  High-standard civil execution engineered with quality materials, advanced methodology,
+                  and safety compliance for government and institutional infrastructure across Gujarat.
+                </p>
+                <div className="portfolio-modal-meta-grid">
+                  <div className="portfolio-modal-meta-item">
+                    <label>Sector</label>
+                    <strong>{selectedProject[1]}</strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Location</label>
+                    <strong>{info.location}</strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Documentation</label>
+                    <strong className="status-delivered">
+                      {videoData ? "Verified Site Video Available" : "Photo Archive"}
+                    </strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Execution Quality</label>
+                    <strong>ISO Standard Compliant</strong>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </>
   );
 }
 
 function GalleryGrid() {
-  const [selectedGallery, setSelectedGallery] = useState<(readonly [string, string]) | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<GalleryItem | null>(null);
+  const [mediaMode, setMediaMode] = useState<"video" | "photo">("video");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1397,87 +1890,160 @@ function GalleryGrid() {
     };
   }, [selectedGallery]);
 
+  const handleOpenGallery = (item: GalleryItem) => {
+    setSelectedGallery(item);
+    setMediaMode(item.video ? "video" : "photo");
+  };
+
   return (
     <>
       <div className="gallery-grid">
-        {gallery.map(([image, title], index) => {
-          const info = parseProjectInfo(title);
-          return (
-            <figure
-              className={`gallery-item gallery-item-${index + 1}`}
-              key={image}
-              onClick={() => setSelectedGallery([image, title])}
-              role="button"
-              tabIndex={0}
-              aria-label={`View full image for ${title}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setSelectedGallery([image, title]);
-                }
-              }}
-            >
-              <img src={image} alt={title} loading="lazy" />
+        {gallery.map((item, index) => (
+          <figure
+            className={`gallery-item gallery-item-${index + 1}`}
+            key={item.id}
+            onClick={() => handleOpenGallery(item)}
+            role="button"
+            tabIndex={0}
+            aria-label={`View project details and video for ${item.title}`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleOpenGallery(item);
+              }
+            }}
+          >
+            <img src={item.image} alt={item.title} loading="lazy" />
 
-              {/* Floating Top Badges */}
-              <div className="gallery-top-tags">
-                <span className="gallery-archive-tag">Archive 0{index + 1}</span>
-                <span className="gallery-location-tag">
-                  <Icon name="map" size={12} />
-                  {info.location}
+            {/* Floating Top Badges */}
+            <div className="gallery-top-tags">
+              <span className="gallery-archive-tag">Archive 0{index + 1}</span>
+              <span className="gallery-location-tag">
+                <Icon name="map" size={12} />
+                {item.location}
+              </span>
+              {item.video && (
+                <span className="gallery-video-pill">
+                  <Icon name="play" size={10} />
+                  <span>Site Video</span>
                 </span>
-              </div>
+              )}
+            </div>
 
-              {/* Bottom Caption Overlay */}
-              <figcaption className="gallery-caption">
-                <div className="gallery-caption-info">
-                  <span className="gallery-spec">Civil Construction</span>
-                  <h4>{title}</h4>
-                </div>
-                <div className="gallery-zoom-btn" title="View Full Image">
-                  <Icon name="arrow" size={16} />
-                </div>
-              </figcaption>
-            </figure>
-          );
-        })}
+            {/* Bottom Caption Overlay */}
+            <figcaption className="gallery-caption">
+              <div className="gallery-caption-info">
+                <span className="gallery-spec">{item.category}</span>
+                <h4>{item.title}</h4>
+              </div>
+              <div className="gallery-zoom-btn" title="Open Video & Photos">
+                <Icon name="play" size={15} />
+              </div>
+            </figcaption>
+          </figure>
+        ))}
       </div>
 
-      {/* Gallery Lightbox Modal */}
+      {/* Gallery Lightbox Modal with Video */}
       {selectedGallery && (
         <div className="portfolio-modal-backdrop" onClick={() => setSelectedGallery(null)}>
-          <div className="portfolio-modal-box" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="portfolio-modal-close"
-              onClick={() => setSelectedGallery(null)}
-              aria-label="Close image preview"
-            >
-              <Icon name="close" size={20} />
-            </button>
-            <div className="portfolio-modal-image-wrap gallery-modal-image-wrap">
-              <img
-                src={selectedGallery[0]}
-                alt={selectedGallery[1]}
-                className="portfolio-modal-image"
-              />
-              <div className="portfolio-modal-image-badges">
-                <span className="project-category-tag">
-                  <span className="project-category-dot" />
-                  Site Archive
-                </span>
-                <span className="project-location-tag">
+          <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="gallery-modal-top-bar">
+              {selectedGallery.video ? (
+                <div className="gallery-modal-tabs">
+                  <button
+                    type="button"
+                    className={`gallery-modal-tab ${mediaMode === "video" ? "active" : ""}`}
+                    onClick={() => setMediaMode("video")}
+                  >
+                    <Icon name="play" size={13} />
+                    <span>Watch Video</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`gallery-modal-tab ${mediaMode === "photo" ? "active" : ""}`}
+                    onClick={() => setMediaMode("photo")}
+                  >
+                    <Icon name="arrow" size={13} />
+                    <span>Photo</span>
+                  </button>
+                </div>
+              ) : (
+                <span className="gallery-modal-top-title">Site Archive</span>
+              )}
+              <button
+                className="portfolio-modal-close"
+                onClick={() => setSelectedGallery(null)}
+                aria-label="Close project preview"
+              >
+                <Icon name="close" size={18} />
+              </button>
+            </div>
+
+            {/* Modal Media Display */}
+            {mediaMode === "video" && selectedGallery.video ? (
+              <div className="gallery-modal-player-wrap">
+                <VideoPlayer
+                  src={selectedGallery.video}
+                  poster={selectedGallery.poster}
+                  title={selectedGallery.title}
+                  autoPlay={true}
+                />
+              </div>
+            ) : (
+              <div className="portfolio-modal-image-wrap gallery-modal-image-wrap">
+                <img
+                  src={selectedGallery.image}
+                  alt={selectedGallery.title}
+                  className="portfolio-modal-image"
+                />
+                <div className="portfolio-modal-image-badges">
+                  <span className="project-category-tag">
+                    <span className="project-category-dot" />
+                    {selectedGallery.category}
+                  </span>
+                  <span className="project-location-tag">
+                    <Icon name="map" size={13} />
+                    {selectedGallery.location}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="portfolio-modal-content">
+              <div className="gallery-modal-header-row">
+                <div>
+                  <span className="project-spec">{selectedGallery.category} • Site Archive</span>
+                  <h3>{selectedGallery.title}</h3>
+                </div>
+                <span className="gallery-modal-loc-badge">
                   <Icon name="map" size={13} />
-                  {parseProjectInfo(selectedGallery[1]).location}
+                  {selectedGallery.location}
                 </span>
               </div>
-            </div>
-            <div className="portfolio-modal-content">
-              <span className="project-spec">On-Site Architectural Documentation</span>
-              <h3>{selectedGallery[1]}</h3>
               <p className="portfolio-modal-desc">
-                High-resolution site capture illustrating the completed structural scale, material quality,
-                and architectural execution delivered by Siddhivinayak Infrastructure across Gujarat.
+                {selectedGallery.desc}
               </p>
+              <div className="portfolio-modal-meta-grid">
+                <div className="portfolio-modal-meta-item">
+                  <label>Location</label>
+                  <strong>{selectedGallery.location}</strong>
+                </div>
+                <div className="portfolio-modal-meta-item">
+                  <label>Sector</label>
+                  <strong>{selectedGallery.category}</strong>
+                </div>
+                <div className="portfolio-modal-meta-item">
+                  <label>Documentation</label>
+                  <strong className="status-delivered">
+                    {selectedGallery.video ? "Verified Site Video Available" : "Photo Archive"}
+                  </strong>
+                </div>
+                <div className="portfolio-modal-meta-item">
+                  <label>Execution Quality</label>
+                  <strong>ISO Standard Compliant</strong>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1874,10 +2440,11 @@ function Media() {
           <div className="video-grid">
             {mediaVideos.map((video, index) => (
               <article className={index === 0 ? "video-featured" : ""} key={video.src}>
-                <video controls playsInline preload="metadata" poster={video.poster}>
-                  <source src={video.src} type="video/mp4" />
-                  Your browser does not support embedded video.
-                </video>
+                <VideoPlayer
+                  src={video.src}
+                  poster={video.poster}
+                  title={video.title}
+                />
                 <div>
                   <span>Film {String(index + 1).padStart(2, "0")}</span>
                   <h3>{video.title}</h3>
@@ -2053,8 +2620,9 @@ function Footer() {
         <div className="footer-brand">
           <img src="/images/siddhivinayak-logo.png" alt="Siddhivinayak Infrastructure" />
           <p>
-            Built on 24 years of trust, delivering dependable infrastructure with experienced
-            architects, designers, and project engineers across Gujarat and India.
+            Delivering landmark construction across Gujarat for over 24 years. Specializing in
+            high-precision industrial facilities, educational campuses, government civil works,
+            and community residential developments.
           </p>
         </div>
         <div>
@@ -2086,7 +2654,7 @@ function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} Siddhivinayak Infrastructure. All rights reserved.</span>
+        <span>24 Years of Trust • © {new Date().getFullYear()} Siddhivinayak Infrastructure. All rights reserved.</span>
         <Link to="/">Back to home ↑</Link>
       </div>
     </footer>
