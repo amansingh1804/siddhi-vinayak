@@ -121,13 +121,13 @@ const slides = [
     video: "/media/videos/site-video-4.mp4",
     poster: "/media/videos/site-video-4.jpg",
     eyebrow: "24 Years of Trust",
-    title: "Committed to every detail.",
-    text: "Experienced teams, modern machinery and a promise to deliver on time.",
+    title: "24 Years of Trust.",
+    text: "Over two decades of proven reliability, disciplined execution and landmark infrastructure across Gujarat.",
   },
 ];
 
 const metrics = [
-  ["24", "Years of experience"],
+  ["24+", "Years of Trust"],
   ["85+", "Projects completed"],
   ["63+", "Projects under execution"],
   ["40+", "Machinery"],
@@ -139,7 +139,7 @@ const values = [
     icon: "check" as IconName,
     title: "Commitment",
     text: "We honor our promises and stay dedicated to delivering excellence.",
-    tags: ["Dedicated", "Reliable", "Responsible"],
+    tags: ["24 Years of Trust", "Reliable", "Responsible"],
   },
   {
     icon: "tools" as IconName,
@@ -495,6 +495,10 @@ function Layout() {
         <Link className="brand" to="/" aria-label="Siddhivinayak Infrastructure home">
           <img src="/images/siddhivinayak-logo.png" alt="Siddhivinayak Infrastructure" />
         </Link>
+        <div className="header-trust-badge" title="24 Years of Construction Trust">
+          <span className="trust-badge-dot" />
+          <span>24 Years of Trust</span>
+        </div>
         <nav className={menuOpen ? "nav-open" : ""} aria-label="Primary navigation">
           {navigation.map(([label, path]) => (
             <NavLink
@@ -509,7 +513,7 @@ function Layout() {
           ))}
         </nav>
         <Link className="header-cta" to="/contact">
-          Business enquiry <Icon name="arrow" size={17} />
+          Business enquiry <Icon name="arrow" size={13} />
         </Link>
         <button
           className="menu-button"
@@ -667,10 +671,6 @@ function Home() {
           <Icon name="arrow" size={22} />
         </button>
         <div className="hero-bottom">
-          <a className="hero-scroll" href="#discover">
-            <span>Scroll</span>
-            <i />
-          </a>
           <div className="hero-tabs" aria-label="Choose a hero slide">
             {slides.map((item, index) => (
               <button
@@ -693,20 +693,20 @@ function Home() {
           <div className="about-image">
             <img src="/images/about.png" alt="Siddhivinayak construction project" />
             <div className="experience-stamp">
-              <strong>24</strong>
+              <strong>24+</strong>
               <span>
                 Years of
                 <br />
-                experience
+                Trust
               </span>
             </div>
           </div>
           <div className="about-copy">
             <p className="eyebrow">About us</p>
-            <h2>Infrastructure that moves communities forward.</h2>
+            <h2>24 Years of Trust in Infrastructure Development.</h2>
             <p className="lead">
-              A multidisciplinary construction company serving industrial, institutional, government
-              and residential sectors across India.
+              With over 24 years of trust and proven engineering excellence, Siddhivinayak Infrastructure
+              delivers dependable civil, industrial, institutional and civic infrastructure across Gujarat.
             </p>
             <PageLink to="/about">Discover our company</PageLink>
           </div>
@@ -948,16 +948,20 @@ function About() {
           <div className="about-image">
             <img src="/images/about.png" alt="Siddhivinayak Infrastructure project" />
             <div className="experience-stamp">
-              <strong>24</strong>
-              <span>Years of experience</span>
+              <strong>24+</strong>
+              <span>
+                Years of
+                <br />
+                Trust
+              </span>
             </div>
           </div>
           <div className="about-copy">
             <p className="eyebrow">Our story</p>
-            <h2>A multidisciplinary construction company.</h2>
+            <h2>24 Years of Trust, Proven Reliability & Excellence.</h2>
             <p className="lead">
-              Siddhivinayak Infrastructure offers a diversified range of construction and allied
-              services across India.
+              Built on more than 24 years of unwavering trust, Siddhivinayak Infrastructure offers a
+              diversified range of construction and allied services across India.
             </p>
             <p>
               Our capabilities span industrial, institutional and government projects, roads,
@@ -1979,8 +1983,8 @@ function Footer() {
         <div className="footer-brand">
           <img src="/images/siddhivinayak-logo.png" alt="Siddhivinayak Infrastructure" />
           <p>
-            A dynamic, diversified construction company creating dependable infrastructure with
-            experienced architects, designers and engineers.
+            Built on 24 years of trust, delivering dependable infrastructure with experienced
+            architects, designers, and project engineers across Gujarat and India.
           </p>
         </div>
         <div>
