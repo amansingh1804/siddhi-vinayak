@@ -1,4 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { createBrowserRouter, Link, NavLink, Outlet, useLocation } from "react-router";
 import ProjectLocationsMap from "./components/ProjectLocationsMap";
 import FounderModal, { LEADERS } from "./components/FounderModal";
@@ -1471,6 +1472,8 @@ function VideoPlayer({
     seekTo(e.touches[0].clientX);
 
     const onTouchMove = (moveEvent: TouchEvent) => {
+      // Prevent background page from scrolling while scrubbing video
+      if (moveEvent.cancelable) moveEvent.preventDefault();
       if (moveEvent.touches[0]) seekTo(moveEvent.touches[0].clientX);
     };
 
@@ -1480,7 +1483,7 @@ function VideoPlayer({
       window.removeEventListener("touchend", onTouchEnd);
     };
 
-    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd);
   };
 
@@ -1673,6 +1676,32 @@ function VideoPlayer({
   );
 }
 
+export function lockBackgroundScroll(): () => void {
+  const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  document.documentElement.classList.add("modal-open");
+  document.body.classList.add("modal-open");
+
+  return () => {
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.documentElement.classList.remove("modal-open");
+    document.body.classList.remove("modal-open");
+    window.scrollTo(0, scrollY);
+  };
+}
+
 function ProjectGrid({
   items,
   featured = true,
@@ -1684,16 +1713,16 @@ function ProjectGrid({
   const [projectMediaMode, setProjectMediaMode] = useState<"video" | "photo">("video");
 
   useEffect(() => {
+    if (!selectedProject) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedProject(null);
     };
-    if (selectedProject) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
+    window.addEventListener("keydown", handleKeyDown);
+    const unlock = lockBackgroundScroll();
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      unlock();
     };
   }, [selectedProject]);
 
@@ -1760,114 +1789,118 @@ function ProjectGrid({
       </div>
 
       {/* Lightbox / Detail Modal with Video */}
-      {selectedProject && (() => {
-        const videoData = getProjectVideo(selectedProject[0], selectedProject[2]);
-        const info = parseProjectInfo(selectedProject[0]);
-        return (
-          <div className="portfolio-modal-backdrop" onClick={() => setSelectedProject(null)}>
-            <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
-              <div className="gallery-modal-top-bar">
-                {videoData ? (
-                  <div className="gallery-modal-tabs">
+      {selectedProject &&
+        createPortal(
+          (() => {
+            const videoData = getProjectVideo(selectedProject[0], selectedProject[2]);
+            const info = parseProjectInfo(selectedProject[0]);
+            return (
+              <div className="portfolio-modal-backdrop" onClick={() => setSelectedProject(null)}>
+                <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
+                  <div className="gallery-modal-top-bar">
+                    {videoData ? (
+                      <div className="gallery-modal-tabs">
+                        <button
+                          type="button"
+                          className={`gallery-modal-tab ${projectMediaMode === "video" ? "active" : ""}`}
+                          onClick={() => setProjectMediaMode("video")}
+                        >
+                          <Icon name="play" size={13} />
+                          <span>Watch Video</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`gallery-modal-tab ${projectMediaMode === "photo" ? "active" : ""}`}
+                          onClick={() => setProjectMediaMode("photo")}
+                        >
+                          <Icon name="arrow" size={13} />
+                          <span>Photo</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="gallery-modal-top-title">Project Archive</span>
+                    )}
                     <button
-                      type="button"
-                      className={`gallery-modal-tab ${projectMediaMode === "video" ? "active" : ""}`}
-                      onClick={() => setProjectMediaMode("video")}
+                      className="portfolio-modal-close"
+                      onClick={() => setSelectedProject(null)}
+                      aria-label="Close project preview"
                     >
-                      <Icon name="play" size={13} />
-                      <span>Watch Video</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`gallery-modal-tab ${projectMediaMode === "photo" ? "active" : ""}`}
-                      onClick={() => setProjectMediaMode("photo")}
-                    >
-                      <Icon name="arrow" size={13} />
-                      <span>Photo</span>
+                      <Icon name="close" size={18} />
                     </button>
                   </div>
-                ) : (
-                  <span className="gallery-modal-top-title">Project Archive</span>
-                )}
-                <button
-                  className="portfolio-modal-close"
-                  onClick={() => setSelectedProject(null)}
-                  aria-label="Close project preview"
-                >
-                  <Icon name="close" size={18} />
-                </button>
-              </div>
 
-              {/* Media Display: VideoPlayer with Orange Scrubber OR High-Res Photo */}
-              {projectMediaMode === "video" && videoData ? (
-                <div className="gallery-modal-player-wrap">
-                  <VideoPlayer
-                    src={videoData.video}
-                    poster={videoData.poster}
-                    title={selectedProject[0]}
-                    autoPlay={true}
-                  />
-                </div>
-              ) : (
-                <div className="portfolio-modal-image-wrap">
-                  <img
-                    src={projectImage(selectedProject[2])}
-                    alt={selectedProject[0]}
-                    className="portfolio-modal-image"
-                  />
-                  <div className="portfolio-modal-image-badges">
-                    <span className="project-category-tag">
-                      <span className="project-category-dot" />
-                      {selectedProject[1]}
-                    </span>
-                    <span className="project-location-tag">
-                      <Icon name="map" size={13} />
-                      {info.location}
-                    </span>
-                  </div>
-                </div>
-              )}
+                  {/* Media Display: VideoPlayer with Orange Scrubber OR High-Res Photo */}
+                  {projectMediaMode === "video" && videoData ? (
+                    <div className="gallery-modal-player-wrap">
+                      <VideoPlayer
+                        src={videoData.video}
+                        poster={videoData.poster}
+                        title={selectedProject[0]}
+                        autoPlay={true}
+                      />
+                    </div>
+                  ) : (
+                    <div className="portfolio-modal-image-wrap">
+                      <img
+                        src={projectImage(selectedProject[2])}
+                        alt={selectedProject[0]}
+                        className="portfolio-modal-image"
+                      />
+                      <div className="portfolio-modal-image-badges">
+                        <span className="project-category-tag">
+                          <span className="project-category-dot" />
+                          {selectedProject[1]}
+                        </span>
+                        <span className="project-location-tag">
+                          <Icon name="map" size={13} />
+                          {info.location}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
-              <div className="portfolio-modal-content">
-                <div className="gallery-modal-header-row">
-                  <div>
-                    <span className="project-spec">{selectedProject[1]} • Siddhivinayak Infrastructure</span>
-                    <h3>{selectedProject[0]}</h3>
-                  </div>
-                  <span className="gallery-modal-loc-badge">
-                    <Icon name="map" size={13} />
-                    {info.location}
-                  </span>
-                </div>
-                <p className="portfolio-modal-desc">
-                  High-standard civil execution engineered with quality materials, advanced methodology,
-                  and safety compliance for government and institutional infrastructure across Gujarat.
-                </p>
-                <div className="portfolio-modal-meta-grid">
-                  <div className="portfolio-modal-meta-item">
-                    <label>Sector</label>
-                    <strong>{selectedProject[1]}</strong>
-                  </div>
-                  <div className="portfolio-modal-meta-item">
-                    <label>Location</label>
-                    <strong>{info.location}</strong>
-                  </div>
-                  <div className="portfolio-modal-meta-item">
-                    <label>Documentation</label>
-                    <strong className="status-delivered">
-                      {videoData ? "Verified Site Video Available" : "Photo Archive"}
-                    </strong>
-                  </div>
-                  <div className="portfolio-modal-meta-item">
-                    <label>Execution Quality</label>
-                    <strong>ISO Standard Compliant</strong>
+                  <div className="portfolio-modal-content">
+                    <div className="gallery-modal-header-row">
+                      <div>
+                        <span className="project-spec">{selectedProject[1]} • Siddhivinayak Infrastructure</span>
+                        <h3>{selectedProject[0]}</h3>
+                      </div>
+                      <span className="gallery-modal-loc-badge">
+                        <Icon name="map" size={13} />
+                        {info.location}
+                      </span>
+                    </div>
+                    <p className="portfolio-modal-desc">
+                      High-standard civil execution engineered with quality materials, advanced methodology,
+                      and safety compliance for government and institutional infrastructure across Gujarat.
+                    </p>
+                    <div className="portfolio-modal-meta-grid">
+                      <div className="portfolio-modal-meta-item">
+                        <label>Sector</label>
+                        <strong>{selectedProject[1]}</strong>
+                      </div>
+                      <div className="portfolio-modal-meta-item">
+                        <label>Location</label>
+                        <strong>{info.location}</strong>
+                      </div>
+                      <div className="portfolio-modal-meta-item">
+                        <label>Documentation</label>
+                        <strong className="status-delivered">
+                          {videoData ? "Verified Site Video Available" : "Photo Archive"}
+                        </strong>
+                      </div>
+                      <div className="portfolio-modal-meta-item">
+                        <label>Execution Quality</label>
+                        <strong>ISO Standard Compliant</strong>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        );
-      })()}
+            );
+          })(),
+          document.body
+        )}
     </>
   );
 }
@@ -1877,16 +1910,16 @@ function GalleryGrid() {
   const [mediaMode, setMediaMode] = useState<"video" | "photo">("video");
 
   useEffect(() => {
+    if (!selectedGallery) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedGallery(null);
     };
-    if (selectedGallery) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
+    window.addEventListener("keydown", handleKeyDown);
+    const unlock = lockBackgroundScroll();
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      unlock();
     };
   }, [selectedGallery]);
 
@@ -1945,109 +1978,111 @@ function GalleryGrid() {
       </div>
 
       {/* Gallery Lightbox Modal with Video */}
-      {selectedGallery && (
-        <div className="portfolio-modal-backdrop" onClick={() => setSelectedGallery(null)}>
-          <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
-            <div className="gallery-modal-top-bar">
-              {selectedGallery.video ? (
-                <div className="gallery-modal-tabs">
-                  <button
-                    type="button"
-                    className={`gallery-modal-tab ${mediaMode === "video" ? "active" : ""}`}
-                    onClick={() => setMediaMode("video")}
-                  >
-                    <Icon name="play" size={13} />
-                    <span>Watch Video</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`gallery-modal-tab ${mediaMode === "photo" ? "active" : ""}`}
-                    onClick={() => setMediaMode("photo")}
-                  >
-                    <Icon name="arrow" size={13} />
-                    <span>Photo</span>
-                  </button>
+      {selectedGallery &&
+        createPortal(
+          <div className="portfolio-modal-backdrop" onClick={() => setSelectedGallery(null)}>
+            <div className="portfolio-modal-box gallery-video-modal-box" onClick={(e) => e.stopPropagation()}>
+              <div className="gallery-modal-top-bar">
+                {selectedGallery.video ? (
+                  <div className="gallery-modal-tabs">
+                    <button
+                      type="button"
+                      className={`gallery-modal-tab ${mediaMode === "video" ? "active" : ""}`}
+                      onClick={() => setMediaMode("video")}
+                    >
+                      <Icon name="play" size={13} />
+                      <span>Watch Video</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`gallery-modal-tab ${mediaMode === "photo" ? "active" : ""}`}
+                      onClick={() => setMediaMode("photo")}
+                    >
+                      <Icon name="arrow" size={13} />
+                      <span>Photo</span>
+                    </button>
+                  </div>
+                ) : (
+                  <span className="gallery-modal-top-title">Site Archive</span>
+                )}
+                <button
+                  className="portfolio-modal-close"
+                  onClick={() => setSelectedGallery(null)}
+                  aria-label="Close project preview"
+                >
+                  <Icon name="close" size={18} />
+                </button>
+              </div>
+
+              {/* Modal Media Display */}
+              {mediaMode === "video" && selectedGallery.video ? (
+                <div className="gallery-modal-player-wrap">
+                  <VideoPlayer
+                    src={selectedGallery.video}
+                    poster={selectedGallery.poster}
+                    title={selectedGallery.title}
+                    autoPlay={true}
+                  />
                 </div>
               ) : (
-                <span className="gallery-modal-top-title">Site Archive</span>
+                <div className="portfolio-modal-image-wrap gallery-modal-image-wrap">
+                  <img
+                    src={selectedGallery.image}
+                    alt={selectedGallery.title}
+                    className="portfolio-modal-image"
+                  />
+                  <div className="portfolio-modal-image-badges">
+                    <span className="project-category-tag">
+                      <span className="project-category-dot" />
+                      {selectedGallery.category}
+                    </span>
+                    <span className="project-location-tag">
+                      <Icon name="map" size={13} />
+                      {selectedGallery.location}
+                    </span>
+                  </div>
+                </div>
               )}
-              <button
-                className="portfolio-modal-close"
-                onClick={() => setSelectedGallery(null)}
-                aria-label="Close project preview"
-              >
-                <Icon name="close" size={18} />
-              </button>
-            </div>
 
-            {/* Modal Media Display */}
-            {mediaMode === "video" && selectedGallery.video ? (
-              <div className="gallery-modal-player-wrap">
-                <VideoPlayer
-                  src={selectedGallery.video}
-                  poster={selectedGallery.poster}
-                  title={selectedGallery.title}
-                  autoPlay={true}
-                />
-              </div>
-            ) : (
-              <div className="portfolio-modal-image-wrap gallery-modal-image-wrap">
-                <img
-                  src={selectedGallery.image}
-                  alt={selectedGallery.title}
-                  className="portfolio-modal-image"
-                />
-                <div className="portfolio-modal-image-badges">
-                  <span className="project-category-tag">
-                    <span className="project-category-dot" />
-                    {selectedGallery.category}
-                  </span>
-                  <span className="project-location-tag">
+              <div className="portfolio-modal-content">
+                <div className="gallery-modal-header-row">
+                  <div>
+                    <span className="project-spec">{selectedGallery.category} • Site Archive</span>
+                    <h3>{selectedGallery.title}</h3>
+                  </div>
+                  <span className="gallery-modal-loc-badge">
                     <Icon name="map" size={13} />
                     {selectedGallery.location}
                   </span>
                 </div>
-              </div>
-            )}
-
-            <div className="portfolio-modal-content">
-              <div className="gallery-modal-header-row">
-                <div>
-                  <span className="project-spec">{selectedGallery.category} • Site Archive</span>
-                  <h3>{selectedGallery.title}</h3>
-                </div>
-                <span className="gallery-modal-loc-badge">
-                  <Icon name="map" size={13} />
-                  {selectedGallery.location}
-                </span>
-              </div>
-              <p className="portfolio-modal-desc">
-                {selectedGallery.desc}
-              </p>
-              <div className="portfolio-modal-meta-grid">
-                <div className="portfolio-modal-meta-item">
-                  <label>Location</label>
-                  <strong>{selectedGallery.location}</strong>
-                </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Sector</label>
-                  <strong>{selectedGallery.category}</strong>
-                </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Documentation</label>
-                  <strong className="status-delivered">
-                    {selectedGallery.video ? "Verified Site Video Available" : "Photo Archive"}
-                  </strong>
-                </div>
-                <div className="portfolio-modal-meta-item">
-                  <label>Execution Quality</label>
-                  <strong>ISO Standard Compliant</strong>
+                <p className="portfolio-modal-desc">
+                  {selectedGallery.desc}
+                </p>
+                <div className="portfolio-modal-meta-grid">
+                  <div className="portfolio-modal-meta-item">
+                    <label>Location</label>
+                    <strong>{selectedGallery.location}</strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Sector</label>
+                    <strong>{selectedGallery.category}</strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Documentation</label>
+                    <strong className="status-delivered">
+                      {selectedGallery.video ? "Verified Site Video Available" : "Photo Archive"}
+                    </strong>
+                  </div>
+                  <div className="portfolio-modal-meta-item">
+                    <label>Execution Quality</label>
+                    <strong>ISO Standard Compliant</strong>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export interface Leader {
   id: string;
@@ -90,12 +91,31 @@ export default function FounderModal({
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
+      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      document.documentElement.classList.add("modal-open");
+      document.body.classList.add("modal-open");
+
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.width = "";
+        document.documentElement.classList.remove("modal-open");
+        document.body.classList.remove("modal-open");
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
   }, [isOpen, currentIndex, onClose, onSelectIndex]);
 
   if (!isOpen) return null;
@@ -104,7 +124,7 @@ export default function FounderModal({
   const prevLeader = LEADERS[(currentIndex - 1 + LEADERS.length) % LEADERS.length];
   const nextLeader = LEADERS[(currentIndex + 1) % LEADERS.length];
 
-  return (
+  return createPortal(
     <div className="founder-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="founder-modal-card" onClick={(e) => e.stopPropagation()}>
         {/* Pinned Top-Right Close Button */}
@@ -238,6 +258,7 @@ export default function FounderModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

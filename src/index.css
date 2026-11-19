@@ -1599,9 +1599,10 @@ h2 {
 .founder-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1100;
-  background: rgba(10, 25, 35, 0.65);
-  backdrop-filter: blur(14px);
+  z-index: 999999 !important;
+  background: rgba(6, 17, 26, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2971,12 +2972,40 @@ input[type="range"] {
   white-space: nowrap;
 }
 
+/* Modal open lock states */
+html.modal-open,
+body.modal-open {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
 /* Ensure modal backdrop sits above all floating elements */
-.portfolio-modal-backdrop {
-  z-index: 100000 !important;
+.portfolio-modal-backdrop,
+.founder-modal-backdrop {
+  z-index: 999999 !important;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.portfolio-modal-box,
+.founder-modal-card {
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.gallery-modal-player-wrap,
+.custom-video-player {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+.custom-video-progress-wrap {
+  touch-action: none !important;
 }
 
 /* Hide floating social bar whenever any modal is open */
+body.modal-open .floating-social-dock,
 body[style*="overflow: hidden"] .floating-social-dock {
   display: none !important;
   opacity: 0 !important;
@@ -3203,9 +3232,10 @@ body[style*="overflow: hidden"] .floating-social-dock {
 .portfolio-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  background: rgba(10, 25, 35, 0.65);
-  backdrop-filter: blur(14px);
+  z-index: 999999 !important;
+  background: rgba(6, 17, 26, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3225,6 +3255,9 @@ body[style*="overflow: hidden"] .floating-social-dock {
   width: min(840px, 100%);
   max-height: 90vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 24px;
