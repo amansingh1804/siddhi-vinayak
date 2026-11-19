@@ -195,26 +195,38 @@ const expertise = [
   {
     number: "01",
     title: "Industrial",
-    text: "Purpose-built factories, training institutes, warehouses and complex industrial facilities.",
+    text: "Purpose-built factories, training institutes, warehouses and complex industrial facilities delivered with precision and durability.",
     image: "/images/project-1.png",
+    count: "15+",
+    countLabel: "Projects delivered",
+    tags: ["Factories", "Warehouses", "ITIs", "Cover Shades"],
   },
   {
     number: "02",
     title: "Institutional",
-    text: "Enduring campuses, colleges, schools and public institutions designed for everyday life.",
+    text: "Enduring campuses, colleges, schools and public institutions designed for everyday life and long-term community use.",
     image: "/images/project-17.jpg",
+    count: "20+",
+    countLabel: "Projects delivered",
+    tags: ["Colleges", "Schools", "Hostels", "Civic Halls"],
   },
   {
     number: "03",
     title: "Government",
-    text: "Dependable civic infrastructure delivered with rigorous quality, safety and accountability.",
+    text: "Dependable civic infrastructure delivered with rigorous quality, safety and accountability at every scale.",
     image: "/images/project-11.jpg",
+    count: "18+",
+    countLabel: "Projects delivered",
+    tags: ["Courts", "Police Stations", "Godowns", "Roads"],
   },
   {
     number: "04",
     title: "Residential",
-    text: "Thoughtful residential environments and quarters made for comfort, longevity and community.",
+    text: "Thoughtful residential environments and government quarters made for comfort, longevity and community well-being.",
     image: "/images/project-8.png",
+    count: "10+",
+    countLabel: "Projects delivered",
+    tags: ["Quarters", "Housing", "Govt. Residential", "Layouts"],
   },
 ];
 
@@ -619,6 +631,90 @@ function HeroSlideItem({
   );
 }
 
+function ExpertiseSection() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = window.setInterval(() => {
+      setActive((i) => (i + 1) % expertise.length);
+    }, 5500);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+
+  const item = expertise[active];
+
+  return (
+    <section className="section expertise-section">
+      <div className="container">
+        <div className="section-heading split">
+          <div>
+            <p className="eyebrow">What we build</p>
+            <h2>Expertise across every sector.</h2>
+          </div>
+          <p>
+            Integrated construction capabilities, experienced teams and disciplined execution bring
+            demanding ideas to life.
+          </p>
+        </div>
+        <div
+          className="expertise-panel"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          {/* Left: Tab list */}
+          <div className="expertise-panel-tabs">
+            {expertise.map((exp, i) => (
+              <button
+                key={exp.title}
+                className={`expertise-tab${i === active ? " active" : ""}`}
+                onClick={() => setActive(i)}
+                aria-pressed={i === active}
+              >
+                {i === active && <span className="expertise-tab-bar" key={active} />}
+                <div className="expertise-tab-top">
+                  <span className="expertise-tab-num">{exp.number}</span>
+                  <h3>{exp.title}</h3>
+                  <span className="expertise-count-badge">{exp.count}</span>
+                </div>
+                <p>{exp.text}</p>
+                <div className="expertise-tags">
+                  {exp.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Right: Image stage */}
+          <div className="expertise-panel-stage" key={active}>
+            <img src={item.image} alt={item.title} />
+            <div className="expertise-panel-shade" />
+            <div className="expertise-panel-label">
+              <div className="expertise-panel-info">
+                <div className="expertise-panel-pill">
+                  <span>{item.number}</span>
+                  <strong>{item.title}</strong>
+                </div>
+                <p>{item.text}</p>
+                <Link to="/projects" className="expertise-panel-cta">
+                  View {item.title} projects <Icon name="arrow" size={14} />
+                </Link>
+              </div>
+              <div className="expertise-panel-stat">
+                <strong>{item.count}</strong>
+                <span>{item.countLabel}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const [slide, setSlide] = useState(0);
   const [selectedLeaderIndex, setSelectedLeaderIndex] = useState(0);
@@ -715,33 +811,7 @@ function Home() {
 
       <Metrics />
 
-      <section className="section expertise-section">
-        <div className="container">
-          <div className="section-heading split">
-            <div>
-              <p className="eyebrow">What we build</p>
-              <h2>Expertise across every sector.</h2>
-            </div>
-            <p>
-              Integrated construction capabilities, experienced teams and disciplined execution
-              bring demanding ideas to life.
-            </p>
-          </div>
-          <div className="expertise-grid">
-            {expertise.map((item) => (
-              <article className="expertise-card" key={item.title}>
-                <img src={item.image} alt="" />
-                <div className="expertise-shade" />
-                <span>{item.number}</span>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ExpertiseSection />
 
       <section className="section home-projects">
         <div className="container">
