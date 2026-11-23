@@ -30,7 +30,7 @@ export const CITIES: CityLocation[] = [
   { name: "Navsari", x: 430, y: 343, column: 1, region: "South Gujarat", projects: "Institutional & Administrative" },
   { name: "Vapi", x: 456, y: 394, column: 1, region: "South Gujarat", projects: "Industrial Development Hub" },
   { name: "Dhandhuka", x: 353, y: 235, column: 1, region: "Ahmedabad Dist.", projects: "Godown & Warehousing Facilities" },
-  { name: "Barvala", x: 327, y: 262, column: 1, region: "Botad Dist.", projects: "Arts & Commerce College" },
+  { name: "Barvala", x: 334, y: 262, column: 1, region: "Botad Dist.", projects: "Arts & Commerce College" },
   { name: "Gadhada", x: 314, y: 276, column: 1, region: "Botad Dist.", projects: "Government Facilities" },
   { name: "Haripar", x: 315, y: 248, column: 1, region: "Saurashtra", projects: "School & Educational Complexes" },
   { name: "Umrala", x: 341, y: 289, column: 1, region: "Bhavnagar Dist.", projects: "Civil & Infrastructure Projects" },

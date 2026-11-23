@@ -2682,8 +2682,8 @@ input[type="range"] {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px 18px 14px;
-  background: linear-gradient(0deg, rgba(2, 7, 12, 0.95) 0%, rgba(2, 7, 12, 0.65) 60%, transparent 100%);
+  padding: 20px 18px 12px;
+  background: linear-gradient(0deg, rgba(8, 14, 20, 0.78) 0%, rgba(8, 14, 20, 0.35) 60%, transparent 100%);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2994,10 +2994,14 @@ body.modal-open {
   touch-action: pan-y;
 }
 
-.gallery-modal-player-wrap,
-.custom-video-player {
+.gallery-modal-player-wrap {
   touch-action: pan-y;
   overscroll-behavior: contain;
+}
+
+.custom-video-player {
+  touch-action: pan-y;
+  overscroll-behavior: auto;
 }
 
 .custom-video-progress-wrap {
@@ -4082,6 +4086,43 @@ body[style*="overflow: hidden"] .floating-social-dock {
   text-transform: none;
   letter-spacing: normal;
 }
+textarea,
+.contact-form textarea {
+  resize: none !important;
+}
+
+/* 24 Years Hero Callout */
+.years-hero-num {
+  display: inline-block;
+  font-size: 2em;
+  line-height: 0.88;
+  font-weight: 800;
+  color: var(--rust);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  margin-right: 0.12em;
+  vertical-align: -0.05em;
+}
+.years-hero-title {
+  display: inline;
+}
+@media (max-width: 760px) {
+  .years-hero-num {
+    font-size: 1.7em;
+    margin-right: 0.08em;
+  }
+}
+
+/* Modern clean sans-serif with lining figures for contact phone numbers */
+a[href^="tel:"],
+.contact-phone,
+.contact-item a[href^="tel:"] span,
+.home-contact-card a[href^="tel:"] {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-variant-numeric: lining-nums tabular-nums !important;
+  font-feature-settings: "lnum" 1, "tnum" 1 !important;
+  letter-spacing: 0.02em;
+}
 .contact-form input:focus,
 .contact-form select:focus,
 .contact-form textarea:focus {
@@ -4749,14 +4790,24 @@ footer {
     padding-bottom: 55px;
   }
   .job-card {
-    grid-template-columns: 34px 1fr;
-    gap: 24px 16px;
-    padding: 38px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 34px 0;
+  }
+  .job-number {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rust);
+    margin-bottom: 2px;
   }
   .job-title,
   .job-details,
+  .job-action-col,
   .job-apply {
-    grid-column: 2;
+    grid-column: auto !important;
+    width: 100% !important;
   }
   .job-meta {
     flex-direction: column;
@@ -5515,9 +5566,18 @@ footer {
     border-radius: 8px !important;
   }
   .job-card {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 36px 0;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    padding: 30px 0 !important;
+  }
+  .job-title,
+  .job-details,
+  .job-action-col,
+  .job-apply {
+    grid-column: auto !important;
+    width: 100% !important;
   }
   .openings-table-card {
     border-radius: 9px !important;

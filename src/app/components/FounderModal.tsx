@@ -104,6 +104,10 @@ export default function FounderModal({
 
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
+        const prevScrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
+        document.body.style.scrollBehavior = "auto";
+
         document.documentElement.style.overflow = "";
         document.body.style.overflow = "";
         document.body.style.position = "";
@@ -113,7 +117,12 @@ export default function FounderModal({
         document.body.style.width = "";
         document.documentElement.classList.remove("modal-open");
         document.body.classList.remove("modal-open");
-        window.scrollTo(0, scrollY);
+        window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+
+        requestAnimationFrame(() => {
+          document.documentElement.style.scrollBehavior = prevScrollBehavior;
+          document.body.style.scrollBehavior = "";
+        });
       };
     }
   }, [isOpen, currentIndex, onClose, onSelectIndex]);

@@ -557,7 +557,7 @@ const hiringProcess = [
 const mediaPhotos = [
   ["/media/content/school-complex.jpg", "School complex"],
   ["/media/content/asalpur-house.png", "Building at Asalpur"],
-  ["/media/content/arts-commerce-college.jpg", "Arts and Commerce College"],
+  ["/media/content/arts-commerce-college.png", "Arts and Commerce College"],
   ["/media/content/cover-shade-udhana.png", "Cover shade at Udhana"],
   ["/media/content/police-station-khergam.png", "Police Station at Khergam"],
   ["/media/content/arts-commerce-barwala.png", "Arts and Commerce College at Barwala"],
@@ -572,7 +572,7 @@ const mediaPhotos = [
 const mediaVideos = Array.from({ length: 7 }, (_, index) => ({
   src: `/media/videos/site-video-${index + 1}.mp4`,
   poster: `/media/videos/site-video-${index + 1}.jpg`,
-  title: `Siddhivinayak Infrastructure film ${String(index + 1).padStart(2, "0")}`,
+  title: `Siddhivinayak Infrastructure - Site Video ${String(index + 1).padStart(2, "0")}`,
 }));
 
 const socialLinks = [
@@ -880,10 +880,13 @@ function Home() {
           </div>
           <div className="about-copy">
             <p className="eyebrow">About us</p>
-            <h2>24 Years of Trust in Infrastructure Development.</h2>
+            <h2>
+              <span className="years-hero-num">24</span>
+              <span className="years-hero-title">Years of Trust in Infrastructure Development.</span>
+            </h2>
             <p className="lead">
-              With over 24 years of trust and proven engineering excellence, Siddhivinayak Infrastructure
-              delivers dependable civil, industrial, institutional and civic infrastructure across Gujarat.
+              Established in 2000, Siddhivinayak Infrastructure brings 24 years of proven engineering excellence,
+              delivering dependable civil, industrial, institutional and civic infrastructure across Gujarat and India.
             </p>
             <PageLink to="/about">Discover our company</PageLink>
           </div>
@@ -1057,21 +1060,28 @@ function Home() {
       </section>
 
       <section className="section home-contact-section">
-        <div className="container contact-grid">
+        <div className="container home-contact-wrapper">
           <div className="contact-copy">
             <p className="eyebrow">Start a conversation</p>
             <h2>Have a project in mind?</h2>
             <p>
-              Tell us what you are planning. Our team is ready to discuss your construction and
-              infrastructure requirements.
+              Tell us what you are planning. Our team is ready to discuss your construction,
+              tendering, and infrastructure requirements across Gujarat.
             </p>
+            <div className="home-contact-actions">
+              <Link to="/contact" className="button">
+                Get in touch <Icon name="arrow" size={16} />
+              </Link>
+              <a href="tel:+919429744199" className="button secondary contact-phone">
+                <Icon name="phone" size={16} /> +91 94297 44199
+              </a>
+            </div>
             <div className="home-contact-note">
-              <span>Prefer to speak directly?</span>
-              <a href="tel:+919429744199">+91 94297 44199</a>
+              <span>Direct contact:</span>
               <a href="mailto:info@siddhiinfra.in">info@siddhiinfra.in</a>
+              <a href="tel:+919429744199" className="contact-phone">+91 94297 44199</a>
             </div>
           </div>
-          <ContactForm />
         </div>
       </section>
       <FounderModal
@@ -1109,14 +1119,17 @@ function About() {
           </div>
           <div className="about-copy">
             <p className="eyebrow">Our story</p>
-            <h2>24 Years of Trust, Proven Reliability & Excellence.</h2>
+            <h2>
+              <span className="years-hero-num">24</span>
+              <span className="years-hero-title">Years of Trust, Proven Reliability & Excellence.</span>
+            </h2>
             <p className="lead">
-              Built on more than 24 years of unwavering trust, Siddhivinayak Infrastructure offers a
-              diversified range of construction and allied services across India.
+              Established in 2000, Siddhivinayak Infrastructure is built on 24 years of unwavering trust,
+              offering a diversified range of construction and allied civil engineering services across Gujarat and India.
             </p>
             <p>
-              Our capabilities span industrial, institutional and government projects, roads,
-              bridges, earthworks, government residential and private residential development.
+              Since our founding in 2000, our capabilities have expanded across industrial, institutional and government projects, roads,
+              bridges, earthworks, government residential and private residential developments.
               Experienced architects, designers, engineers and project teams work together to
               deliver reliable, high-quality results on time.
             </p>
@@ -1181,11 +1194,11 @@ function About() {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "8px" }}>
                   <h3 style={{ margin: 0 }}>Our vision</h3>
                   <span style={{ fontSize: "0.74rem", fontWeight: 700, letterSpacing: "0.08em", padding: "4px 12px", borderRadius: "9999px", background: "rgba(226, 111, 18, 0.15)", border: "1px solid rgba(226, 111, 18, 0.4)", color: "#ea7e2a" }}>
-                    ₹21,111 CRORE BY 2036
+                    ₹1,111 CRORE BY 2036
                   </span>
                 </div>
                 <p>
-                  To achieve 21111 Crore by 2036 by creating an organisation built on reliability,
+                  To achieve ₹1,111 Crore by 2036 by creating an organisation built on reliability,
                   world-class behaviour, and unstoppable growth.
                 </p>
               </div>
@@ -1689,6 +1702,10 @@ export function lockBackgroundScroll(): () => void {
   document.body.classList.add("modal-open");
 
   return () => {
+    const prevScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+    document.body.style.scrollBehavior = "auto";
+
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
     document.body.style.position = "";
@@ -1698,7 +1715,12 @@ export function lockBackgroundScroll(): () => void {
     document.body.style.width = "";
     document.documentElement.classList.remove("modal-open");
     document.body.classList.remove("modal-open");
-    window.scrollTo(0, scrollY);
+    window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+
+    requestAnimationFrame(() => {
+      document.documentElement.style.scrollBehavior = prevScrollBehavior;
+      document.body.style.scrollBehavior = "";
+    });
   };
 }
 
@@ -2464,12 +2486,12 @@ function Media() {
         <div className="container">
           <div className="section-heading split">
             <div>
-              <p className="eyebrow">Films</p>
+              <p className="eyebrow">Project Videos</p>
               <h2>On site with our teams.</h2>
             </div>
             <p>
-              Explore seven films from Siddhivinayak Infrastructure projects, people and active
-              construction sites.
+              Explore verified on-site drone captures and footage from Siddhivinayak Infrastructure projects, people and active
+              construction sites across Gujarat.
             </p>
           </div>
           <div className="video-grid">
@@ -2481,7 +2503,7 @@ function Media() {
                   title={video.title}
                 />
                 <div>
-                  <span>Film {String(index + 1).padStart(2, "0")}</span>
+                  <span>Project Video {String(index + 1).padStart(2, "0")}</span>
                   <h3>{video.title}</h3>
                 </div>
               </article>
@@ -2600,7 +2622,7 @@ function Contact() {
                   <small>Email</small>info@siddhiinfra.in
                 </span>
               </a>
-              <a href="tel:+919429744199">
+              <a href="tel:+919429744199" className="contact-phone">
                 <Icon name="phone" />
                 <span>
                   <small>Phone</small>+91 94297 44199
@@ -2655,7 +2677,7 @@ function Footer() {
         <div className="footer-brand">
           <img src="/images/siddhivinayak-logo.png" alt="Siddhivinayak Infrastructure" />
           <p>
-            Delivering landmark construction across Gujarat for over 24 years. Specializing in
+            Established in 2000, delivering landmark construction across Gujarat for 24 years. Specializing in
             high-precision industrial facilities, educational campuses, government civil works,
             and community residential developments.
           </p>
@@ -2679,7 +2701,7 @@ function Footer() {
         <div>
           <h4>Connect</h4>
           <a href="mailto:info@siddhiinfra.in">info@siddhiinfra.in</a>
-          <a href="tel:+919429744199">+91 94297 44199</a>
+          <a href="tel:+919429744199" className="contact-phone">+91 94297 44199</a>
           <span>Surat, Gujarat, India</span>
           {socialLinks.map(([label, url]) => (
             <a href={url} target="_blank" rel="noreferrer" key={label}>
@@ -2689,7 +2711,7 @@ function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>24 Years of Trust • © {new Date().getFullYear()} Siddhivinayak Infrastructure. All rights reserved.</span>
+        <span>Established 2000 • 24 Years of Trust • © {new Date().getFullYear()} Siddhivinayak Infrastructure. All rights reserved.</span>
         <Link to="/">Back to home ↑</Link>
       </div>
     </footer>
