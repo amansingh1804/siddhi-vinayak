@@ -1072,14 +1072,11 @@ function Home() {
               <Link to="/contact" className="button">
                 Get in touch <Icon name="arrow" size={16} />
               </Link>
-              <a href="tel:+919429744199" className="button secondary contact-phone">
-                <Icon name="phone" size={16} /> +91 94297 44199
-              </a>
             </div>
             <div className="home-contact-note">
               <span>Direct contact:</span>
-              <a href="mailto:info@siddhiinfra.in">info@siddhiinfra.in</a>
               <a href="tel:+919429744199" className="contact-phone">+91 94297 44199</a>
+              <a href="mailto:info@siddhiinfra.in">info@siddhiinfra.in</a>
             </div>
           </div>
         </div>

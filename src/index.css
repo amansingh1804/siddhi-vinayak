@@ -3019,11 +3019,26 @@ body[style*="overflow: hidden"] .floating-social-dock {
 .home-contact-section {
   background: var(--surface);
 }
+.home-contact-wrapper {
+  max-width: 720px;
+}
+.home-contact-actions {
+  margin-top: 32px;
+}
+.home-contact-actions .button {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .home-contact-actions .button {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
 .home-contact-section .contact-form {
   background: white;
 }
 .home-contact-note {
-  margin-top: 55px;
+  margin-top: 40px;
   padding-top: 24px;
   border-top: 1px solid var(--line);
 }
