@@ -1318,7 +1318,25 @@ function projectImage(image: number) {
   return `/images/project-${image}.${extension}`;
 }
 
+const GUJARAT_CITIES = [
+  "Ahmedabad", "Botad", "Surat", "Navsari", "Vapi", "Dhandhuka", "Barvala", "Barwala",
+  "Vallabhipur", "Asalpur", "Vinchhiya", "Ranpur", "Udhana", "Bilimora", "Valsad",
+  "Gadhada", "Shihor", "Haripar", "Khergam", "Pardi"
+];
+
 function parseProjectInfo(rawTitle: string) {
+  for (const city of GUJARAT_CITIES) {
+    const cityRegex = new RegExp(`\\b${city}\\b`, "i");
+    if (cityRegex.test(rawTitle)) {
+      const atMatch = rawTitle.match(/^(.*?)\s+at\s+(.*)$/i);
+      return {
+        title: atMatch ? atMatch[1].trim() : rawTitle,
+        fullTitle: rawTitle,
+        location: `${city}, Gujarat`,
+      };
+    }
+  }
+
   const atMatch = rawTitle.match(/^(.*?)\s+at\s+(.*)$/i);
   if (atMatch) {
     let loc = atMatch[2].trim();
@@ -1776,14 +1794,16 @@ function ProjectGrid({
 
               {/* Floating Top Badges */}
               <div className="project-top-tags">
-                <span className="project-category-tag">
-                  <span className="project-category-dot" />
-                  {category}
-                </span>
-                <span className="project-location-tag">
-                  <Icon name="map" size={13} />
-                  {info.location}
-                </span>
+                <div className="project-tags-group">
+                  <span className="project-category-tag">
+                    <span className="project-category-dot" />
+                    {category}
+                  </span>
+                  <span className="project-location-tag">
+                    <Icon name="map" size={12} />
+                    {info.location}
+                  </span>
+                </div>
                 {videoData && (
                   <span className="project-video-pill">
                     <Icon name="play" size={10} />
