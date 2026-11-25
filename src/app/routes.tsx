@@ -207,7 +207,6 @@ const values = [
 
 const projects = [
   ["Industrial Training Institute at Shihor", "Industrial", 1],
-  ["Cover Shade at Surat", "Industrial", 6],
   ["Industrial Training Institute at Vallabhipur", "Institutional", 4],
   ["Arts and Commerce College at Gadhada", "Institutional", 2],
   ["Government Residential Quarters at Botad", "Government Residential", 8],
@@ -236,7 +235,7 @@ const expertise = [
     text: "Purpose-built factories, training institutes, warehouses, and complex industrial structures delivered with precision and durability.",
     image: "/images/project-1.png",
     count: "15+ Projects",
-    tags: ["Factories", "Warehouses", "ITIs", "Cover Shades"],
+    tags: ["Factories", "Warehouses", "ITIs", "Industrial Sheds"],
   },
   {
     number: "02",
