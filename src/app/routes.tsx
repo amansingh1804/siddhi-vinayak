@@ -2547,11 +2547,35 @@ function Media() {
   );
 }
 
+const GOOGLE_SHEET_WEBAPP_URL =
+  "https://script.google.com/macros/s/AKfycby0_iT-gl_xo3o6D1NaHNVYMYbj9i3iPDr8dC4ZI5eTmI5U9qJ7KYgfdpjik8xTjU8YEQ/exec";
+
 function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const params = new URLSearchParams();
+    for (const [key, value] of formData.entries()) {
+      params.append(key, value.toString());
+    }
+
+    setLoading(true);
+    try {
+      await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+        method: "POST",
+        body: params,
+        mode: "no-cors",
+      });
+    } catch (err) {
+      console.error("Form submission error:", err);
+    } finally {
+      setLoading(false);
+      setSubmitted(true);
+    }
   };
   return (
     <form className="contact-form" onSubmit={submit}>
@@ -2599,8 +2623,13 @@ function ContactForm() {
             Tell us about your requirement
             <textarea required name="message" rows={4} placeholder="How can we help?" />
           </label>
-          <button className="form-submit" type="submit">
-            Send enquiry <Icon name="arrow" size={18} />
+          <button
+            className="form-submit"
+            type="submit"
+            disabled={loading}
+            style={loading ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
+          >
+            {loading ? "Sending enquiry..." : "Send enquiry"} <Icon name="arrow" size={18} />
           </button>
         </>
       )}
