@@ -2654,7 +2654,18 @@ function Contact() {
           <ContactForm />
         </div>
         <div className="container office-location-card">
-          <img src="/media/content/office-location.jpg" alt="Corporate office location map" />
+          <div className="office-map-frame-wrap">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3520.6177168897434!2d72.80484767493091!3d21.225225481002855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04fd3efd870cb%3A0xf4c9c224bb66cd4a!2sSIDDHIVINAYAK%20INFRASTRUCTURE!5e1!3m2!1sen!2sin!4v1795528364111!5m2!1sen!2sin"
+              width="600"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="SIDDHIVINAYAK INFRASTRUCTURE Google Maps Location"
+            />
+          </div>
           <div>
             <p className="eyebrow">Corporate office</p>
             <h2>Visit us in Surat.</h2>
