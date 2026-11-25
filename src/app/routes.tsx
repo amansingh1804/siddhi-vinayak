@@ -147,14 +147,6 @@ const slides = [
     text: "From campuses to civic landmarks, every structure begins with responsibility.",
   },
   {
-    image: "/images/project-11.jpg",
-    video: "/media/videos/site-video-3.mp4",
-    poster: "/media/videos/site-video-3.jpg",
-    eyebrow: "Public Infrastructure",
-    title: "Progress, made tangible.",
-    text: "Delivering complex government projects with quality, safety and speed.",
-  },
-  {
     image: "/images/project-18.jpg",
     video: "/media/videos/site-video-4.mp4",
     poster: "/media/videos/site-video-4.jpg",
