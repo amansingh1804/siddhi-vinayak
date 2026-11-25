@@ -2320,8 +2320,8 @@ h2 {
 .purpose-image {
   min-height: 650px;
   background:
-    linear-gradient(rgba(6, 30, 47, 0.08), rgba(6, 30, 47, 0.08)),
-    url("/images/hero-2.jpg") center/cover;
+    linear-gradient(rgba(6, 30, 47, 0.04), rgba(6, 30, 47, 0.04)),
+    url("/images/purpose-building.jpg") center/cover no-repeat;
 }
 .purpose-copy {
   padding: 100px clamp(50px, 7.5vw, 125px);
