@@ -209,7 +209,6 @@ const projects = [
   ["Industrial Training Institute at Shihor", "Industrial", 1],
   ["Cover Shade at Surat", "Industrial", 6],
   ["Industrial Training Institute at Vallabhipur", "Institutional", 4],
-  ["Cover Shade at Udhana Railway Station", "Government", 9],
   ["Arts and Commerce College at Gadhada", "Institutional", 2],
   ["Government Residential Quarters at Botad", "Government Residential", 8],
   ["Industrial Training Institute at Ranpur", "Industrial", 3],
@@ -558,7 +557,7 @@ const mediaPhotos = [
   ["/media/content/school-complex.jpg", "School complex"],
   ["/media/content/asalpur-house.png", "Building at Asalpur"],
   ["/media/content/arts-commerce-college.png", "Arts and Commerce College"],
-  ["/media/content/cover-shade-udhana.png", "Cover shade at Udhana"],
+  ["/images/project-1.png", "Industrial Training Institute at Shihor"],
   ["/media/content/police-station-khergam.png", "Police Station at Khergam"],
   ["/media/content/arts-commerce-barwala.png", "Arts and Commerce College at Barwala"],
   ["/media/content/iti-ranpur.png", "Industrial Training Institute at Ranpur"],
@@ -1320,7 +1319,7 @@ function projectImage(image: number) {
 
 const GUJARAT_CITIES = [
   "Ahmedabad", "Botad", "Surat", "Navsari", "Vapi", "Dhandhuka", "Barvala", "Barwala",
-  "Vallabhipur", "Asalpur", "Vinchhiya", "Ranpur", "Udhana", "Bilimora", "Valsad",
+  "Vallabhipur", "Asalpur", "Vinchhiya", "Ranpur", "Bilimora", "Valsad",
   "Gadhada", "Shihor", "Haripar", "Khergam", "Pardi"
 ];
 

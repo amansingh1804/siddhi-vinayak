@@ -40,7 +40,6 @@ export const CITIES: CityLocation[] = [
   { name: "Asalpur", x: 340, y: 262, column: 2, region: "Botad Dist.", projects: "Government Building & Housing" },
   { name: "Vinchhiya", x: 302, y: 276, column: 2, region: "Rajkot Dist.", projects: "Public Facilities & Civil Work" },
   { name: "Ranpur", x: 328, y: 249, column: 2, region: "Botad Dist.", projects: "Court Building & ITI Campus" },
-  { name: "Udhana", x: 443, y: 329, column: 2, region: "Surat", projects: "Cover Shade & Industrial Works" },
   { name: "Bilimora", x: 430, y: 371, column: 2, region: "Navsari Dist.", projects: "Commercial & Civil Infrastructure" },
   { name: "Valsad", x: 430, y: 384, column: 2, region: "South Gujarat", projects: "Government Quarters & Buildings" },
   { name: "Subhir", x: 469, y: 370, column: 2, region: "Dang Dist.", projects: "Community & Administrative Centers" },
@@ -2953,9 +2952,7 @@ export const MAP_DOTS: MapDot[] = [
   },
   {
     "x": 443,
-    "y": 329,
-    "city": "Udhana",
-    "isProject": true
+    "y": 329
   },
   {
     "x": 161,
