@@ -4378,6 +4378,50 @@ footer {
 .footer-main a:hover {
   color: white;
 }
+.footer-social-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.footer-social-link {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.75) !important;
+  margin: 0 !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.footer-social-link:hover {
+  transform: translateY(-2px);
+  color: #ffffff !important;
+}
+.footer-social-link.social-linkedin:hover {
+  background: #0a66c2;
+  border-color: #0a66c2;
+  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
+}
+.footer-social-link.social-facebook:hover {
+  background: #1877f2;
+  border-color: #1877f2;
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
+}
+.footer-social-link.social-instagram:hover {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(225, 48, 108, 0.4);
+}
+.footer-social-link.social-whatsapp:hover {
+  background: #25d366;
+  border-color: #25d366;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.13);
   margin-top: 65px;
